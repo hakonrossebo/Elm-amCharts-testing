@@ -6,6 +6,7 @@ type alias Model =
   { statusText : String
   , showExtraInfo : Bool
   , items: List ChartItemDetail
+  , showingChart: Bool
   , seed: Seed
   }
 

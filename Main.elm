@@ -24,6 +24,7 @@ model =
     { statusText = "Showing extra info:"
     , showExtraInfo = False
     , items = chartItems
+    , showingChart = False
     , seed = initialSeed 31254
     }
 
@@ -34,7 +35,7 @@ type Msg
     = NoOp
     | ToggleExtraInfo
     | UpdateChartData
-
+    | ShowChart
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -51,6 +52,8 @@ update msg model =
             in
             ( {model | seed = (snd updatedItems), items = (fst updatedItems)}, setUpdatedData (fst updatedItems) )
 
+        ShowChart ->
+          ({model | showingChart = True}, showChart model.items)
 
 intList : Int -> Generator (List Int)
 intList count =
@@ -76,7 +79,8 @@ view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick ToggleExtraInfo ] [ text "Show/hide extra info" ]
-        , button [ onClick UpdateChartData ] [ text "Update chart with random data" ]
+        , if not model.showingChart then button [ onClick ShowChart ] [ text "Show chart" ] else text ""
+        , if model.showingChart then button [ onClick UpdateChartData ] [ text "Update chart with random data" ] else text ""
         , div [] [ text <| model.statusText ++ if model.showExtraInfo then " True" else " False" ]
         , viewExtraInfo model
         , div [ id "chartdiv" ] [ ]

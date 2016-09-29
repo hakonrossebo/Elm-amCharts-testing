@@ -8726,15 +8726,23 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _user$project$Models$Model = F4(
-	function (a, b, c, d) {
-		return {statusText: a, showExtraInfo: b, items: c, seed: d};
+var _user$project$Models$Model = F5(
+	function (a, b, c, d, e) {
+		return {statusText: a, showExtraInfo: b, items: c, showingChart: d, seed: e};
 	});
 var _user$project$Models$ChartItemDetail = F2(
 	function (a, b) {
 		return {country: a, visits: b};
 	});
 
+var _user$project$CustomPorts$showChart = _elm_lang$core$Native_Platform.outgoingPort(
+	'showChart',
+	function (v) {
+		return _elm_lang$core$Native_List.toArray(v).map(
+			function (v) {
+				return {country: v.country, visits: v.visits};
+			});
+	});
 var _user$project$CustomPorts$setUpdatedData = _elm_lang$core$Native_Platform.outgoingPort(
 	'setUpdatedData',
 	function (v) {
@@ -8850,7 +8858,7 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'UpdateChartData':
 				var updatedItems = _user$project$Main$updateItemsWithRandom(model);
 				return {
 					ctor: '_Tuple2',
@@ -8863,14 +8871,24 @@ var _user$project$Main$update = F2(
 					_1: _user$project$CustomPorts$setUpdatedData(
 						_elm_lang$core$Basics$fst(updatedItems))
 				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{showingChart: true}),
+					_1: _user$project$CustomPorts$showChart(model.items)
+				};
 		}
 	});
 var _user$project$Main$model = {
 	statusText: 'Showing extra info:',
 	showExtraInfo: false,
 	items: _user$project$FakeData$chartItems,
+	showingChart: false,
 	seed: _elm_lang$core$Random$initialSeed(31254)
 };
+var _user$project$Main$ShowChart = {ctor: 'ShowChart'};
 var _user$project$Main$UpdateChartData = {ctor: 'UpdateChartData'};
 var _user$project$Main$ToggleExtraInfo = {ctor: 'ToggleExtraInfo'};
 var _user$project$Main$view = function (model) {
@@ -8890,7 +8908,17 @@ var _user$project$Main$view = function (model) {
 					[
 						_elm_lang$html$Html$text('Show/hide extra info')
 					])),
-				A2(
+				_elm_lang$core$Basics$not(model.showingChart) ? A2(
+				_elm_lang$html$Html$button,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Events$onClick(_user$project$Main$ShowChart)
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Show chart')
+					])) : _elm_lang$html$Html$text(''),
+				model.showingChart ? A2(
 				_elm_lang$html$Html$button,
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -8899,7 +8927,7 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html$text('Update chart with random data')
-					])),
+					])) : _elm_lang$html$Html$text(''),
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
