@@ -32,7 +32,7 @@ model =
 
 type Msg
     = NoOp
-    | DoSomething
+    | ToggleExtraInfo
     | UpdateChartData
 
 
@@ -42,7 +42,7 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        DoSomething ->
+        ToggleExtraInfo ->
             ( { model | showExtraInfo = not model.showExtraInfo }, Cmd.none )
 
         UpdateChartData ->
@@ -75,7 +75,7 @@ updateItemsWithRandom model =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick DoSomething ] [ text "Show/hide extra info" ]
+        [ button [ onClick ToggleExtraInfo ] [ text "Show/hide extra info" ]
         , button [ onClick UpdateChartData ] [ text "Update chart with random data" ]
         , div [] [ text <| model.statusText ++ if model.showExtraInfo then " True" else " False" ]
         , viewExtraInfo model
