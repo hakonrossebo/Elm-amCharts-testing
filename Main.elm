@@ -79,7 +79,7 @@ view model =
         , button [ onClick UpdateChartData ] [ text "Update chart with random data" ]
         , div [] [ text <| model.statusText ++ if model.showExtraInfo then " True" else " False" ]
         , viewExtraInfo model
-        , div [ id "chartdiv" ] [ text "test" ]
+        , div [ id "chartdiv" ] [ ]
         ]
 
 
