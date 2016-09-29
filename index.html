@@ -28,12 +28,10 @@
 
     <!-- Chart code -->
     <script>
-    var chart = AmCharts.makeChart( "chartdiv", {
-      "type": "serial",
-      "theme": "light",
-      "dataProvider": [ {
+
+      var chartData = [ {
         "country": "USA",
-        "visits": 2025
+        "visits": 1252
       }, {
         "country": "China",
         "visits": 1882
@@ -70,7 +68,24 @@
       }, {
         "country": "Brazil",
         "visits": 395
-      } ],
+      }, {
+        "country": "Italy",
+        "visits": 386
+      }, {
+        "country": "Australia",
+        "visits": 384
+      }, {
+        "country": "Taiwan",
+        "visits": 338
+      }, {
+        "country": "Poland",
+        "visits": 328
+    } ];
+
+    var chart = AmCharts.makeChart( "chartdiv", {
+      "type": "serial",
+      "theme": "light",
+      "dataProvider": chartData,
       "valueAxes": [ {
         "gridColor": "#FFFFFF",
         "gridAlpha": 0.2,
