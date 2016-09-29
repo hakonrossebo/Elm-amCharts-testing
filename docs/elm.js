@@ -8920,9 +8920,7 @@ var _user$project$Main$view = function (model) {
 						_elm_lang$html$Html_Attributes$id('chartdiv')
 					]),
 				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('test')
-					]))
+					[]))
 			]));
 };
 var _user$project$Main$main = {
