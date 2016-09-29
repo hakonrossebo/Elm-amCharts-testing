@@ -20,6 +20,8 @@ myJSTestApp.ports.showChart.subscribe(function(items) {
         "type": "column",
         "valueField": "visits"
       } ],
+      "depth3D": 20,
+        "angle": 30,
       "chartCursor": {
         "categoryBalloonEnabled": false,
         "cursorAlpha": 0,
