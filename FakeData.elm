@@ -2,6 +2,7 @@ module FakeData exposing (..)
 
 import Models exposing (..)
 
+
 chartItems : List ChartItemDetail
 chartItems =
     [ { country = "USA"

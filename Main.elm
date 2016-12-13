@@ -1,6 +1,5 @@
 module Main exposing (..)
 
-import Html.App as App
 import Html exposing (..)
 import Html.Attributes exposing (id, href, class, style)
 import Html.Events exposing (onClick)
@@ -9,9 +8,10 @@ import CustomPorts exposing (..)
 import FakeData exposing (..)
 import Random exposing (..)
 
-main : Program Never
+
+main : Program Never Model Msg
 main =
-    App.program
+    Html.program
         { init = ( model, Cmd.none )
         , view = view
         , update = update
@@ -29,13 +29,12 @@ model =
     }
 
 
-
-
 type Msg
     = NoOp
     | ToggleExtraInfo
     | UpdateChartData
     | ShowChart
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -48,42 +47,58 @@ update msg model =
 
         UpdateChartData ->
             let
-              updatedItems = updateItemsWithRandom model
+                updatedItems =
+                    updateItemsWithRandom model
             in
-            ( {model | seed = (snd updatedItems), items = (fst updatedItems)}, setUpdatedData (fst updatedItems) )
+                ( { model | seed = (Tuple.second updatedItems), items = (Tuple.first updatedItems) }, setUpdatedData (Tuple.first updatedItems) )
 
         ShowChart ->
-          ({model | showingChart = True}, showChart model.items)
+            ( { model | showingChart = True }, showChart model.items )
+
 
 intList : Int -> Generator (List Int)
 intList count =
     list count (int 0 2000)
 
 
-updateItemsWithRandom : Model -> (List ChartItemDetail, Seed)
+updateItemsWithRandom : Model -> ( List ChartItemDetail, Seed )
 updateItemsWithRandom model =
-  let
-    count = List.length model.items
-    randomData = step (intList count) model.seed
-    items =
-      model.items
-        |> List.map2 (,) (fst randomData)
-        |> List.map (\(number, item) -> {item | visits = number})
-  in
-    (items, snd randomData)
+    let
+        count =
+            List.length model.items
 
+        randomData =
+            step (intList count) model.seed
 
+        items =
+            model.items
+                |> List.map2 (,) (Tuple.first randomData)
+                |> List.map (\( number, item ) -> { item | visits = number })
+    in
+        ( items, Tuple.second randomData )
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick ToggleExtraInfo ] [ text "Show/hide extra info" ]
-        , if not model.showingChart then button [ onClick ShowChart ] [ text "Show chart" ] else text ""
-        , if model.showingChart then button [ onClick UpdateChartData ] [ text "Update chart with random data" ] else text ""
-        , div [] [ text <| model.statusText ++ if model.showExtraInfo then " True" else " False" ]
+        , if not model.showingChart then
+            button [ onClick ShowChart ] [ text "Show chart" ]
+          else
+            text ""
+        , if model.showingChart then
+            button [ onClick UpdateChartData ] [ text "Update chart with random data" ]
+          else
+            text ""
+        , div []
+            [ text <| model.statusText
+                ++ if model.showExtraInfo then
+                    " True"
+                   else
+                    " False"
+            ]
         , viewExtraInfo model
-        , div [ id "chartdiv" ] [ ]
+        , div [ id "chartdiv" ] []
         ]
 
 
@@ -93,13 +108,14 @@ viewExtraInfo model =
         True ->
             div []
                 (List.map viewItem model.items)
+
         False ->
             text ""
 
 
 viewItem : ChartItemDetail -> Html Msg
 viewItem item =
-      div [] [ text <| "Country: " ++ item.country ++ ", " ++ (toString item.visits) ]
+    div [] [ text <| "Country: " ++ item.country ++ ", " ++ (toString item.visits) ]
 
 
 subscriptions : Model -> Sub Msg
